@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  CUSTOMER
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  email         String    @unique
+  username      String    @unique
+  password      String
+  walletBalance Int?      @default(0)
+  totalSpent    Int?      @default(0)
+  orders        Order[]
+  emailVerified Boolean?  @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime? @updatedAt
+  active        Boolean?  @default(true)
+  avatar        String?
+  role          Role?     @default(CUSTOMER)
+
+  token Token?
+}
+
+model Token {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  hash    String @unique
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id Int    @unique
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  imageUrl    String?
+  price       Float
+  stock       Int
+  orders      Order[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  File        File[]
+}
+
+model Order {
+  id         Int       @id @default(autoincrement())
+  userId     Int
+  user       User      @relation(fields: [userId], references: [id])
+  products   Product[]
+  totalValue Float
+  status     String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  payedAt    DateTime?
+}
+
+model File {
+  id        Int      @id @default(autoincrement())
+  url       String
+  productId Int?
+  product   Product? @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+}
