@@ -89,6 +89,7 @@ export class UserService {
       data: {
         email: data.email,
         username: data.username,
+        role: data.role,
       },
     });
   }

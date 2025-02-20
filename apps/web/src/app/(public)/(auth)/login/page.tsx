@@ -19,7 +19,6 @@ import { z } from "zod";
 
 export default function Login() {
   const { setUser } = useAuthContext();
-  const { toast } = useToast();
   const [loginError, setLoginError] = useState<{
     isError: boolean;
     message?: string;
@@ -55,8 +54,7 @@ export default function Login() {
       setUser({
         id: res.data.id,
         email: res.data.email,
-        first_name: res.data.first_name,
-        last_name: res.data.last_name,
+        username: res.data.username,
         role: res.data.role,
       });
     } catch (ex: unknown) {
@@ -125,7 +123,7 @@ export default function Login() {
                       <div className="flex justify-between">
                         <FormLabel>Senha</FormLabel>
                         <Link
-                          href="https://swag.yoobe.app/auth/signin/forgot-password"
+                          href="/signin/forgot-password"
                           className="text-sm font-medium underline underline-offset-4 hover:text-primary"
                           prefetch={false}
                         >

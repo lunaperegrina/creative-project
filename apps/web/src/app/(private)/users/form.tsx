@@ -24,7 +24,6 @@ import { z } from "zod";
 
 export default function FormUtil({
   name,
-  description,
   type,
   defaultValues = {
     email: "",
@@ -45,14 +44,20 @@ export default function FormUtil({
 
   const formSchema = z.object({
     email: z.string().email({ message: "Email inválido." }),
-    password: z.string().min(8, { message: "Senha deve ter pelo menos 8 caracteres." }),
+    password: z.string().min(8, { message: "Senha deve ter pelo menos 8 caracteres." })
+      .optional(),
     username: z.string(),
     role: z.any(),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues,
+    defaultValues: {
+      email: defaultValues.email,
+      password: defaultValues.password,
+      username: defaultValues.username,
+      role: defaultValues.role,
+    },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -81,7 +86,6 @@ export default function FormUtil({
         }
       }
     }
-
     if (type === "update" && id) {
       try {
         await updateUser(id, {

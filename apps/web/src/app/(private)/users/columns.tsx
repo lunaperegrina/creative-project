@@ -18,25 +18,22 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useUsersContext } from "@/contexts/users.context";
-import { useWalletContext } from "@/contexts/wallet.context";
 import type { ColumnDef } from "@tanstack/react-table";
-import type { User } from "interfaces";
+import type { User } from "@prisma/client";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import FormUtil from "./form";
-import WalletForm from "./wallet-form";
 
 export const columns: ColumnDef<User>[] = [
   {
-    accessorKey: "name",
+    accessorKey: "username",
     header: ({ column }) => {
       return (
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          Nome
+          Username
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
-    cell: ({ row }) => `${row.original.first_name} ${row.original.last_name}`,
   },
   {
     accessorKey: "email",
@@ -44,6 +41,28 @@ export const columns: ColumnDef<User>[] = [
       return (
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           E-mail
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+  },
+  {
+    accessorKey: "walletBalance",
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          Saldo
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+  },
+  {
+    accessorKey: "totalSpent",
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          Total Gasto
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -82,7 +101,6 @@ export const columns: ColumnDef<User>[] = [
     header: "Ações",
     cell: ({ row }) => {
       const { removeUser } = useUsersContext();
-      const { activeWallet } = useWalletContext();
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -93,27 +111,16 @@ export const columns: ColumnDef<User>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="flex flex-col items-start gap-4">
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
-            {activeWallet && (
-              <WalletForm
-                name="Editar Carteira"
-                description="Adicionar ou remover créditos"
-                defaultValues={{
-                  email: row.original.email,
-                  credits: "",
-                }}
-                user_id={row.original.id}
-              />
-            )}
             <FormUtil
               name="Editar"
               description="Edite este usuario"
               defaultValues={{
-                first_name: row.original.first_name,
-                last_name: row.original.last_name,
+                username: row.original.username,
                 email: row.original.email,
                 role: row.original.role,
               }}
               type="update"
+              id={row.original.id}
             />
             <Dialog>
               <DialogTrigger asChild>
@@ -122,7 +129,7 @@ export const columns: ColumnDef<User>[] = [
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>
-                    Excluir usuario "{row.original.first_name} {row.original.last_name}"
+                    Excluir usuario "{row.original.username}"
                   </DialogTitle>
                   <DialogDescription>Quer mesmo excluir este usuario?</DialogDescription>
                 </DialogHeader>

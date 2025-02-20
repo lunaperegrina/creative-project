@@ -1,9 +1,10 @@
 {
-  "name": "linkcard",
+  "name": "creative",
   "private": true,
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
+    "start": "turbo start",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prisma:generate": "prisma generate --schema=./apps/api/@shared/prisma/schema.prisma"
@@ -22,11 +23,16 @@
     "packages/*"
   ],
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.750.0",
     "@radix-ui/react-icons": "^1.3.2",
+    "aws-sdk": "^2.1692.0",
     "axios": "^1.7.9",
     "lucide-react": "^0.475.0",
     "next-themes": "^0.4.4",
+    "react-dropzone": "^14.3.5",
     "react-loading-skeleton": "^3.5.0",
+    "react-number-format": "^5.4.3",
+    "slugify": "^1.6.6",
     "zustand": "^5.0.3"
   },
   "prisma": {

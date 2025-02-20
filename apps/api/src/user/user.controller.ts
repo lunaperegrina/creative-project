@@ -40,7 +40,7 @@ export class UserController {
 
   @Public()
   @Get()
-  @ApiCreatedResponse({ type: UserOutputDTO })
+  @ApiOkResponse({ type: UserOutputDTO })
   async readAll(
     @Query() query: GetAllQueryDTO,
   ): Promise<User[] | PaginatedOutputDTO<UserOutputDTO>> {

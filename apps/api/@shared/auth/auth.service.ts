@@ -65,7 +65,7 @@ export class AuthService {
 
     if (tokenExists) {
       const user = await this.prismaService.user.findUnique({
-        where: { id: tokenExists.user_id },
+        where: { id: tokenExists.userId },
       });
 
       return this.generateToken(user);
@@ -84,12 +84,12 @@ export class AuthService {
     const token = await this.jwtService.signAsync(payload);
 
     const previousToken = await this.prismaService.token.findUnique({
-      where: { user_id: user.id },
+      where: { userId: user.id },
     });
 
     if (previousToken) {
       await this.prismaService.token.update({
-        where: { user_id: user.id },
+        where: { userId: user.id },
         data: {
           hash: token,
         },
@@ -111,7 +111,17 @@ export class AuthService {
     const jwt = await this.jwtService.decode(token);
     const user = await this.getActiveUser(jwt.email);
     if (user) {
-      return jwt;
+      console.log(user);
+      console.log(jwt);
+      return {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        role: user.role,
+        sub: jwt.sub,
+        iat: jwt.iat,
+        exp: jwt.exp,
+      };
     }
 
     throw new HttpException('Unauthorized', HttpStatus.BAD_REQUEST);

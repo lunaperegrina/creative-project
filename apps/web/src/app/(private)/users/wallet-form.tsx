@@ -16,7 +16,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useUsersContext } from "@/contexts/users.context";
-import { useWalletContext } from "@/contexts/wallet.context";
 import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
@@ -42,7 +41,6 @@ export default function WalletForm({
   user_id: number;
 }) {
   const { addCredit, removeCredit } = useUsersContext();
-  const { activeWallet, selectableWallets, getSelectableWallets } = useWalletContext();
   const [addState, setAddState] = useState<boolean>(true);
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
@@ -60,15 +58,14 @@ export default function WalletForm({
   useEffect(() => {
     if (!user_id) return;
 
-    getSelectableWallets(user_id);
   }, [user_id, setIsOpen]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!user_id || !activeWallet) return;
+    if (!user_id) return;
 
     if (addState) {
       try {
-        await addCredit(user_id, activeWallet.store_id, parseInt(values.credits));
+        await addCredit(user_id, parseInt(values.credits));
         toast({ description: "Creditos adicionados com sucesso" });
         setIsOpen(false);
       } catch (ex: unknown) {
@@ -77,7 +74,7 @@ export default function WalletForm({
       }
     } else {
       try {
-        await removeCredit(user_id, activeWallet.store_id, parseInt(values.credits));
+        await removeCredit(user_id, parseInt(values.credits));
         toast({ description: "Creditos removidos com sucesso" });
         setIsOpen(false);
       } catch (ex: unknown) {
@@ -97,9 +94,6 @@ export default function WalletForm({
           <DialogTitle>Editar carteira</DialogTitle>
           <DialogDescription>{form.getValues().email}</DialogDescription>
         </DialogHeader>
-        {/* TODO: Pegar créditos de outro lugar */}
-        {/* <p>Crédito: {selectableWallets.find((wallet) => wallet.store_id === activeWallet?.store_id)?.credits}</p> */}
-
         <div className="flex flex-row items-center gap-2">
           <Switch
             className="data-[state=checked]:bg-mainBlue items-center"
@@ -108,7 +102,6 @@ export default function WalletForm({
           />
           <Label className="mt-2">Adicionar</Label>
         </div>
-
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField

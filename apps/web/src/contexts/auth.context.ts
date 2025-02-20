@@ -6,8 +6,7 @@ export type Role = "ADMIN" | "MANAGER" | "CUSTOMER";
 export interface UserAuthProps {
   id: number;
   email: string;
-  first_name: string;
-  last_name: string;
+  username: string;
   role: Role;
 }
 
@@ -37,8 +36,7 @@ export const useAuthContext = create(
           const user = {
             id: res.data.sub,
             email: res.data.email,
-            first_name: res.data.first_name,
-            last_name: res.data.last_name,
+            username: res.data.username,
             role: res.data.role,
           };
           set({ user });

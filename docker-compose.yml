@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db:
     image: postgres:latest
@@ -7,11 +5,27 @@ services:
     environment:
       POSTGRES_USER: myuser           # Nome do usuário do banco de dados
       POSTGRES_PASSWORD: mypassword   # Senha do banco de dados
-      POSTGRES_DB: alfa-manager-dev   # Nome do banco de dados
+      POSTGRES_DB: creative-dev   # Nome do banco de dados
     ports:
       - "5432:5432"                   # Porta exposta (5432 é a padrão do PostgreSQL)
     volumes:
       - postgres_data:/var/lib/postgresql/data  # Volume para persistência dos dados
+    networks:
+      - alfa-net
+
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   environment:
+  #     - PGADMIN_DEFAULT_PASSWORD=postgres
+  #     - PGADMIN_DEFAULT_EMAIL=database@alfa.co
+  #   ports:
+  #     - 5050:80
+  #   networks:
+  #     - alfa-net
 
 volumes:
   postgres_data:                      # Volume para persistência dos dados do PostgreSQL
+
+networks:
+  alfa-net:
+    driver: bridge

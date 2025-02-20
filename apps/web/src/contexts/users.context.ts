@@ -15,13 +15,13 @@ type State = {
 type Actions = {
   setPagination: (pagination: Partial<Pagination>) => void;
   setFilter: (filter: string) => void;
-  getUsers: (store_id?: number, per?: number) => Promise<void>;
-  getSelectableUsers: (store_id?: number) => Promise<void>;
+  getUsers: (per?: number) => Promise<void>;
+  getSelectableUsers: () => Promise<void>;
   addUser: (u: Partial<User>) => Promise<void>;
   updateUser: (id: number, u: Partial<User>) => Promise<void>;
   removeUser: (id: number) => Promise<void>;
-  addCredit: (user_id: number, store_id: number, credits: number) => Promise<void>;
-  removeCredit: (user_id: number, store_id: number, credits: number) => Promise<void>;
+  addCredit: (store_id: number, credits: number) => Promise<void>;
+  removeCredit: (store_id: number, credits: number) => Promise<void>;
 };
 
 export const useUsersContext = create<State & Actions>((set, get) => ({
@@ -39,6 +39,7 @@ export const useUsersContext = create<State & Actions>((set, get) => ({
   },
   filter: "",
   setFilter: (filter: string) => {
+    console.log(filter);
     set({ filter });
   },
   users: [],
@@ -50,14 +51,7 @@ export const useUsersContext = create<State & Actions>((set, get) => ({
     }
     let res: AxiosResponse;
 
-    if (store_id) {
-      res = await api.get(
-        `user/store/${store_id}?page=${currentPage}&perPage=${perPage}${addSearchFilter(get().filter)}`
-      );
-    } else {
-      res = await api.get(`user?page=${currentPage}&perPage=${perPage}${addSearchFilter(get().filter)}`);
-    }
-
+    res = await api.get(`user?page=${currentPage}&perPage=${perPage}${addSearchFilter(get().filter)}`);
     set({
       pagination: currentPage > res.data.meta.lastPage ? { ...res.data.meta, currentPage: 1 } : res.data.meta,
       users: res.data.data,
@@ -69,7 +63,7 @@ export const useUsersContext = create<State & Actions>((set, get) => ({
     const res = await api.get("user/selectable");
     const selectables: SelectObject[] = [];
     for (const obj of res.data) {
-      selectables.push({ value: obj.id, label: `${obj.first_name} ${obj.last_name}` });
+      selectables.push({ value: obj.id, label: `${obj.username}` });
     }
     set({ selectableUsers: selectables });
   },
@@ -87,13 +81,15 @@ export const useUsersContext = create<State & Actions>((set, get) => ({
     }
   },
   updateUser: async (id: number, u: Partial<User>) => {
+    console.log('aaaa')
     try {
-      const res = await api.put(`/user/${id}`, {
+      const res = await api.patch(`/user/${id}`, {
         username: u.username,
         email: u.email,
         password: u.password,
         role: u.role,
       });
+      console.log(res.data);
       set((state) => ({
         users: state.users.map((oldData) => (oldData.id === u.id ? res.data : oldData)),
       }));
@@ -111,22 +107,20 @@ export const useUsersContext = create<State & Actions>((set, get) => ({
       throw new Error(ex as string);
     }
   },
-  addCredit: async (user_id: number, store_id: number, credits: number) => {
+  addCredit: async (user_id: number, credits: number) => {
     try {
       await api.post("/wallet/add-credit", {
         user_id,
-        store_id,
         credits,
       });
     } catch (ex: unknown) {
       throw new Error(ex as string);
     }
   },
-  removeCredit: async (user_id: number, store_id: number, credits: number) => {
+  removeCredit: async (user_id: number, credits: number) => {
     try {
       await api.post("/wallet/remove-credit", {
         user_id,
-        store_id,
         credits,
       });
     } catch (ex: unknown) {

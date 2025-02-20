@@ -7,12 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  ADMIN
-  MANAGER
-  CUSTOMER
-}
-
 model User {
   id            Int       @id @default(autoincrement())
   email         String    @unique
@@ -26,50 +20,65 @@ model User {
   updatedAt     DateTime? @updatedAt
   active        Boolean?  @default(true)
   avatar        String?
-  role          Role?     @default(CUSTOMER)
+  role          Role?     @default(CLIENT)
 
-  token Token?
+  token     Token?
+  creatives Creative[] @relation("DesignerCreatives") // Relação com Creative
 }
 
 model Token {
-  id         Int      @id @default(autoincrement())
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  hash    String @unique
-  user    User   @relation(fields: [user_id], references: [id])
-  user_id Int    @unique
-}
-
-model Product {
-  id          Int      @id @default(autoincrement())
-  name        String
-  description String
-  imageUrl    String?
-  price       Float
-  stock       Int
-  orders      Order[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  File        File[]
+  hash   String @unique
+  user   User   @relation(fields: [userId], references: [id])
+  userId Int    @unique
 }
 
 model Order {
-  id         Int       @id @default(autoincrement())
-  userId     Int
-  user       User      @relation(fields: [userId], references: [id])
-  products   Product[]
-  totalValue Float
-  status     String
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  payedAt    DateTime?
+  id          Int          @id @default(autoincrement())
+  userId      Int
+  user        User         @relation(fields: [userId], references: [id])
+  type        CreativeType
+  copy        String?
+  niche       String?
+  vision      String?
+  reference   String?
+  status      OrderStatus  @default(PENDING)
+  price       Float
+  createdAt   DateTime     @default(now())
+  deliveredAt DateTime?
+
+  // Pedido tem um criativo finalizado
+  creative Creative?
 }
 
-model File {
-  id        Int      @id @default(autoincrement())
-  url       String
-  productId Int?
-  product   Product? @relation(fields: [productId], references: [id])
-  createdAt DateTime @default(now())
+model Creative {
+  id         Int      @id @default(autoincrement())
+  orderId    Int      @unique
+  order      Order    @relation(fields: [orderId], references: [id])
+  fileUrl    String
+  createdAt  DateTime @default(now())
+  designer   User?    @relation("DesignerCreatives", fields: [designerId], references: [id]) // Relação com User
+  designerId Int? // Campo para armazenar o ID do designer
+}
+
+enum Role {
+  CLIENT
+  DESIGNER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELED
+}
+
+enum CreativeType {
+  VIDEO
+  IMAGE
+  DEEPFAKE
 }

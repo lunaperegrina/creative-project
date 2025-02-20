@@ -14,6 +14,9 @@ import {
   Store,
   Truck,
   Users,
+  User,
+  Barcode,
+  LogOut,
 } from "lucide-react";
 import type { ForwardRefExoticComponent, RefAttributes } from "react";
 
@@ -60,19 +63,21 @@ const RoutesWithPermissions: RoutesWithPermissionsProps[] = [
     separatorTop: true,
   },
   {
-    name: "Configurações",
-    route: "/settings",
-    icon: Settings,
+    name: "Catálogo",
+    route: "/catalog",
+    icon: BookImage,
     roles: ["ADMIN", "MANAGER", "CUSTOMER"],
-    separatorTop: true,
+    // separatorTop: true,
   },
   {
     name: "Sair",
     route: "/logout",
     roles: ["ADMIN", "MANAGER", "CUSTOMER"],
-    icon: DoorOpen,
+    icon: LogOut,
+    // separatorTop: true,
+
     className:
-      "text-red-500 hover:bg-red-100 hover:text-red-900 dark:text-red-400 dark:hover:bg-red-800 dark:hover:text-red-50 p-4 w-full justify-start gap-2",
+      "text-red-500 hover:text-red-600 hover:bg-red-50 p-4 w-full justify-start gap-2",
   },
 ];
 
