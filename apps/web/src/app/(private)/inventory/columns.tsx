@@ -158,6 +158,7 @@ export const columns: ColumnDef<ProductWithFiles>[] = [
                   </DialogClose>
                   <DialogClose asChild>
                     <Button
+                    variant={"ghost"}
                       className="bg-red-500 hover:bg-red-600 text-white ml-2"
                       onClick={() => {
                         try {

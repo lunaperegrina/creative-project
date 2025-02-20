@@ -319,7 +319,7 @@ export default function FormUtil({
               </DialogClose>
               <Button
                 disabled={form.formState.isSubmitting}
-                className="bg-[#5143F1] hover:bg-[#38327b] hover:text-white text-white font-semibold rounded-full"
+                // className="bg-[#5143F1] hover:bg-[#38327b] hover:text-white text-white font-semibold rounded-full"
                 type="submit"
               >
                 Salvar

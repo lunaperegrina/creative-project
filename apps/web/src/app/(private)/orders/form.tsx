@@ -25,6 +25,7 @@ import { z } from "zod";
 export default function FormUtil({
   name,
   type,
+  description,
   defaultValues = {
     email: "",
     password: "",
@@ -105,11 +106,11 @@ export default function FormUtil({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild className={type === "create" ? "w-full md:w-max md:self-end" : ""}>
-        <Button variant={type === "create" ? "outline" : "link"}>{name}</Button>
+        <Button variant={type === "create" ? "default" : "ghost"}  className="w-full">{name}</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Criar um novo usuário</DialogTitle>
+          <DialogTitle>{description}</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>

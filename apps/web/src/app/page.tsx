@@ -11,7 +11,7 @@ export default function LandingPage() {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <Image src="/images/alfa-manager.png" alt="Logo" width={40} height={40} />
-            <span className="text-xl font-bold text-cyan-600">Alfa Manager</span>
+            <span className="text-xl font-bold text-cyan-600">Creative</span>
           </div>
           <nav>
             <ul className="flex space-x-2 items-center">
@@ -160,7 +160,7 @@ export default function LandingPage() {
 
       <footer className="bg-gray-800 text-white py-8">
         <div className="container mx-auto px-4 text-center">
-          <p>&copy; {new Date().getFullYear()} Alfa Manager. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Creative. All rights reserved.</p>
         </div>
       </footer>
     </div>

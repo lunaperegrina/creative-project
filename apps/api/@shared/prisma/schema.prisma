@@ -20,7 +20,7 @@ model User {
   updatedAt     DateTime? @updatedAt
   active        Boolean?  @default(true)
   avatar        String?
-  role          Role?     @default(CLIENT)
+  role          Role?     @default(CUSTOMER)
 
   token     Token?
   creatives Creative[] @relation("DesignerCreatives") // Relação com Creative
@@ -65,7 +65,7 @@ model Creative {
 }
 
 enum Role {
-  CLIENT
+  CUSTOMER
   DESIGNER
   ADMIN
 }

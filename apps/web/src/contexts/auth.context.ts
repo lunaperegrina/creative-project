@@ -2,7 +2,7 @@ import api from "@/services/api";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-export type Role = "ADMIN" | "MANAGER" | "CUSTOMER";
+export type Role = "ADMIN" | "DESIGNER" | "CUSTOMER";
 export interface UserAuthProps {
   id: number;
   email: string;

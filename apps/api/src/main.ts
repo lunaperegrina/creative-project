@@ -20,7 +20,7 @@ async function bootstrap() {
 
   // API DOCS WITH SWAGGER
   const config = new DocumentBuilder()
-    .setTitle('Alfa Manager API')
+    .setTitle('Creative API')
     .setDescription('description')
     .setVersion('1.0')
     .addBearerAuth()

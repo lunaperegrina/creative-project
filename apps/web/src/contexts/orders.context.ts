@@ -1,31 +1,37 @@
 import api from "@/services/api";
 import { addSearchFilter } from "@/utils/add-search-filter-to-query";
 import { AxiosResponse } from "axios";
-import type { Order } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import { create } from "zustand";
-
-type ShipOrder = {
-  future: boolean;
-  future_store_id?: number;
-};
 
 type State = {
   isLoading: boolean;
   pagination: Pagination;
   filter: string;
-  orders: Order[];
+  orders: OrderWithCretiveAndDesigners[];
   selectableOrders: SelectObject[];
 };
+
+type OrderWithCretiveAndDesigners = Prisma.OrderGetPayload<{
+  include: {
+    user: true;
+    creative: {
+      include: {
+        designer: true;
+      };
+    }
+  };
+}>;
 
 type Actions = {
   setPagination: (pagination: Partial<Pagination>) => void;
   setFilter: (filter: string) => void;
-  getOrders: (store_id?: number, per?: number) => Promise<void>;
+  getOrders: (per?: number) => Promise<void>;
   getSelectableOrders: () => Promise<void>;
-  updateOrder: (id: number, s: Partial<Order>) => Promise<void>;
+  updateOrder: (id: number, s: Partial<OrderWithCretiveAndDesigners>) => Promise<void>;
   acceptOrder: (id: number) => Promise<void>;
   undoAcceptOrder: (id: number) => Promise<void>;
-  shipOrder: (id: number, data: ShipOrder) => Promise<void>;
+  shipOrder: (id: number, data: OrderWithCretiveAndDesigners) => Promise<void>;
   undoShipOrder: (id: number) => Promise<void>;
   doneOrder: (id: number) => Promise<void>;
   undoDoneOrder: (id: number) => Promise<void>;
@@ -49,21 +55,15 @@ export const useOrdersContext = create<State & Actions>((set, get) => ({
     set({ filter });
   },
   orders: [],
-  getOrders: async (store_id?: number, per?: number) => {
+  getOrders: async (per?: number) => {
     set({ isLoading: true });
     const { currentPage, perPage } = get().pagination;
     if (per) {
       set({ pagination: { ...get().pagination, perPage: per } });
     }
-    let res: AxiosResponse;
+    const res: AxiosResponse = await api.get(`order?page=${currentPage}&perPage=${perPage}${addSearchFilter(get().filter)}`);
 
-    if (store_id) {
-      res = await api.get(
-        `order/store/${store_id}?page=${currentPage}&perPage=${perPage}${addSearchFilter(get().filter)}`
-      );
-    } else {
-      res = await api.get(`order?page=${currentPage}&perPage=${perPage}${addSearchFilter(get().filter)}`);
-    }
+    console.log(res.data.data);
     set({
       pagination: currentPage > res.data.meta.lastPage ? { ...res.data.meta, currentPage: 1 } : res.data.meta,
       orders: res.data.data,

@@ -78,7 +78,7 @@ export function DataTablePagination<TData>({ table, pagination, setPagination }:
         </div>
         <div className="flex items-center space-x-2">
           <Button
-            variant="outline"
+            variant="default"
             className="h-8 w-8 p-0"
             onClick={() => setPagination({ currentPage: 1 })}
             disabled={table.getState().pagination.pageIndex === 1}
@@ -87,7 +87,7 @@ export function DataTablePagination<TData>({ table, pagination, setPagination }:
             <DoubleArrowLeftIcon className="h-4 w-4" />
           </Button>
           <Button
-            variant="outline"
+            variant="default"
             className="h-8 w-8 p-0"
             onClick={() =>
               setPagination({
@@ -100,7 +100,7 @@ export function DataTablePagination<TData>({ table, pagination, setPagination }:
             <ChevronLeftIcon className="h-4 w-4" />
           </Button>
           <Button
-            variant="outline"
+            variant="default"
             className="h-8 w-8 p-0"
             onClick={() =>
               setPagination({
@@ -113,7 +113,7 @@ export function DataTablePagination<TData>({ table, pagination, setPagination }:
             <ChevronRightIcon className="h-4 w-4" />
           </Button>
           <Button
-            variant="outline"
+            variant="default"
             className="h-8 w-8 p-0"
             onClick={() => setPagination({ currentPage: table.getPageCount() })}
             disabled={table.getState().pagination.pageIndex === table.getPageCount()}

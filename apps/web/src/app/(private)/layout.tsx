@@ -11,17 +11,19 @@ import { useState } from "react";
 import RoutesWithPermissions, { type RoutesWithPermissionsProps } from "../routes-with-permissions";
 import Loading from "@/components/loading";
 import { User } from "lucide-react";
+import { ModeToggle } from "@/components/toggle-theme";
 
 function Header() {
   return (
     <div className="flex flex-1 items-center justify-between">
       <div className="flex items-center">
-        <h1 className="text-3xl font-bold">Alfa Manager</h1>
+        <h1 className="text-3xl font-bold">Meu Criativo</h1>
       </div>
-      <div className="flex items-center">
-        <Button variant="outline" className="h-12 rounded-full" asChild>
+      <div className="flex items-center gap-4">
+        <ModeToggle className="w-10 h-10" />
+        <Button variant="outline" className="h-10 w-10 rounded-sm" asChild>
           <Link href="/profile">
-            <User className="w-10 h-10" />
+            <User className="w-5 h-5" />
           </Link>
         </Button>
       </div>
@@ -75,10 +77,10 @@ function RenderNavButton(
         }}
         className={
           button.route === pathname
-            ? "bg-gray-100 w-full justify-start p-4"
+            ? "w-full justify-start p-4 bg-primary/5 dark:bg-primary/20" // Estilo quando ativo
             : button.className
               ? button.className
-              : "p-4 w-full justify-start gap-2 "
+              : "p-4 w-full justify-start gap-2 hover:bg-muted/50 dark:hover:bg-muted/50" // Estilo padrão e hover
         }
         asChild
       >
@@ -143,7 +145,7 @@ function NavbarMobile({ user }: { user: UserAuthProps | null }) {
         </SheetTrigger>
         <SheetContent side={"left"} className="gap-4 flex flex-col items-center max-[420px]:w-full overflow-x-auto">
           <SheetHeader>
-            <SheetTitle>Alfa Manager</SheetTitle>
+            <SheetTitle>Creative</SheetTitle>
           </SheetHeader>
           <NavbarLinks user={user} setSheetOpen={setSheetOpen} pathname={pathname} />
         </SheetContent>
